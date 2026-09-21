@@ -1,13 +1,40 @@
-﻿// 測試
+﻿using System.Linq;
+
+// 測試
 int[] test1 = [];
 int[] test2 = [1, 1, 2, 2, 3];
 int[] test3 = [7];
-if (FindMostFrequent(test1) == "陣列為空") Console.WriteLine("PASS");
-else Console.WriteLine("FAIL");
-if (FindMostFrequent(test2) == "1 和 2") Console.WriteLine("PASS");
-else Console.WriteLine("FAIL");
-if (FindMostFrequent(test3) == "7") Console.WriteLine("PASS");
-else Console.WriteLine("FAIL");
+try {
+    FindMostFrequent(test1);
+    Console.WriteLine("FAIL");
+}
+catch {
+    Console.WriteLine("PASS");
+}
+
+try
+{
+    int[] ans = FindMostFrequent(test2).ToArray();
+    Array.Sort(ans);
+    if (ans.SequenceEqual(new[] {1,2})) Console.WriteLine("PASS");
+    else Console.WriteLine("FAIL");
+}
+catch
+{
+    Console.WriteLine("FAIL");
+}
+
+try
+{
+    int[] ans = FindMostFrequent(test3).ToArray();
+    Array.Sort(ans);
+    if (ans.SequenceEqual(new[] {7})) Console.WriteLine("PASS");
+    else Console.WriteLine("FAIL");
+}
+catch
+{
+    Console.WriteLine("FAIL");
+}
 
 // 自由輸入陣列
 List<int> myArray = new List<int>();
@@ -23,22 +50,22 @@ do
 while (true);
 
 // 跑 func
-string answer;
-answer = FindMostFrequent(myArray.ToArray());
-// 答案輸出
-if (answer != "陣列為空")
+try
 {
-    Console.WriteLine($"出現最多次的數字是： {answer}");
-} else
+    int[] answer;
+    answer = FindMostFrequent(myArray.ToArray()).ToArray();
+    Array.Sort(answer);
+    Console.WriteLine($"出現最多次的數字是： {string.Join(" 和 ", answer)}");
+} catch (Exception error)
 {
-    Console.WriteLine($"錯誤： {answer}");
+    Console.WriteLine($"錯誤： {error}");
 }
-Console.ReadKey();
+
 
 // 篩出最多次數數字
-static string FindMostFrequent(int[] numbers)
+static List<int> FindMostFrequent(int[] numbers)
 {
-    if (numbers.Length == 0) return "陣列為空";
+    if (numbers.Length == 0) throw new ArgumentException("陣列不可為空");
 
     Dictionary<int, int> dict = new Dictionary<int, int>();
     for (int i = 0; i < numbers.Length; i++)
@@ -47,19 +74,17 @@ static string FindMostFrequent(int[] numbers)
         else dict[numbers[i]] = 1;
     }
 
-    int[] maxNum = [numbers[0]];
     int[] dictKey = dict.Keys.ToArray();
+    List<int> maxNum = [dictKey[0]];
     for (int i = 0; i < dictKey.Length; i++)
     {
         if (dict[dictKey[i]] > dict[maxNum[0]]) {
-            System.Array.Resize(ref maxNum, 1);
-            maxNum[0] = dictKey[i];
+            maxNum.Clear();
+            maxNum.Add(dictKey[i]);
         } 
         else if (dict[dictKey[i]] == dict[maxNum[0]] && dictKey[i] != maxNum[0]) {
-            System.Array.Resize(ref maxNum, maxNum.Length + 1);
-            maxNum[maxNum.Length - 1] = dictKey[i];
+            maxNum.Add(dictKey[i]);
         }
     }
-    string answer = string.Join(" 和 ",maxNum);
-    return answer;
+    return maxNum;
 }
