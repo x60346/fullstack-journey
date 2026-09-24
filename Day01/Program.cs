@@ -1,4 +1,42 @@
-﻿using System.Linq;
+﻿List<int> test1 = [1, 2, 3];
+List<int> test2 = [1, 1, 1];
+List<int> test3 = [0];
+
+if (SumOfEven(test1) == 2)
+{
+    Console.WriteLine("PASS");
+} else
+{
+    Console.WriteLine("FAIL");
+}
+if (SumOfEven(test2) == 0)
+{
+    Console.WriteLine("PASS");
+}
+else
+{
+    Console.WriteLine("FAIL");
+}
+if (SumOfEven(test3) == 0)
+{
+    Console.WriteLine("PASS");
+}
+else
+{
+    Console.WriteLine("FAIL");
+}
+
+static int SumOfEven(List<int> numbers)
+{
+    List<int> allEven = [];
+    for (int i = 0; i < numbers.ToArray().Length; i++)
+    {
+        if (numbers[i] % 2 == 0) allEven.Add(numbers[i]);
+    }
+    return allEven.Sum();
+}
+
+/*using System.Linq;
 
 // 測試
 int[] test1 = [];
@@ -88,3 +126,4 @@ static List<int> FindMostFrequent(int[] numbers)
     }
     return maxNum;
 }
+*/
