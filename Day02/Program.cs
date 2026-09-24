@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-List<Article> Articles = new List<Article>
+﻿List<Article> articles = new List<Article>
 {
     new Article(1, "C# Book", "Amy", 10, DateTime.Parse("2026-01-01")),
     new Article(2, "C++ Book", "David", 50, DateTime.Parse("2026-02-02")),
@@ -9,28 +7,14 @@ List<Article> Articles = new List<Article>
     new Article(5, "Just a Book", "Amy", 200, DateTime.Parse("2026-05-05"))
 };
 
-IEnumerable<string> over100 = Articles
+IEnumerable<string> over100 = articles
     .Where(item => item.Views > 100)
     .Select(item => item.Title);
-IEnumerable<Article> orderByCreatedAt = Articles
+IEnumerable<Article> orderByCreatedAt = articles
     .OrderByDescending(item => item.CreatedAt);
-IEnumerable<(string Author,int Views)> allViews = Articles
-    .Select(item => (item.Author, item.Views));
-Dictionary<string, int> everyViews = new Dictionary<string, int>();
-foreach (var item in allViews)
-{
-    if (everyViews.TryGetValue(item.Author, out int value))
-    {
-        everyViews[item.Author] = value + item.Views;
-    }
-    else
-    {
-        everyViews[item.Author] = item.Views;
-    }
-}
-IEnumerable<string> includeC = Articles
-    .Where (item => item.Title.Contains("C#"))
-    .Select(item => item.Title);
+IEnumerable<IGrouping<string, Article>> everyViews = articles.GroupBy(item => item.Author);
+bool includeC = articles
+    .Any(item => item.Title.Contains("C#"));
 
 Console.WriteLine("5.");
 Console.WriteLine($"Views 超過 100 的文章標題： {string.Join("、", over100)}");
@@ -40,11 +24,17 @@ foreach (var item in orderByCreatedAt)
     Console.WriteLine($"{item.Title} write by {item.Author}" );
 }
 Console.WriteLine("某個作者的總瀏覽數：");
-foreach(var item in everyViews)
+foreach(var arthor in everyViews)
 {
-    Console.WriteLine($"{item.Key}： {item.Value}");
+    Console.Write($"{arthor.Key}：");
+    int counts = 0;
+    foreach(var views in arthor)
+    {
+        counts = counts + views.Views;
+    }
+    Console.WriteLine(counts);
 }
-Console.WriteLine($"有沒有標題包含「C#」的文章： {string.Join("、", includeC)}");
+Console.WriteLine($"有沒有標題包含「C#」的文章： {includeC}");
 
 Console.WriteLine("\n6.");
 
@@ -61,24 +51,38 @@ int allSum2 = test2
 int allSum3 = test3
     .Where(item => item % 2 == 0)
     .Sum();
-
-Console.WriteLine($"test1： {allSum1}");
-Console.WriteLine($"test2： {allSum2}");
-Console.WriteLine($"test3： {allSum3}");
+if(allSum1 == 2)
+{
+    Console.WriteLine("PASS");
+} else
+{
+    Console.WriteLine("FAIL");
+}
+if (allSum2 == 0)
+{
+    Console.WriteLine("PASS");
+}
+else
+{
+    Console.WriteLine("FAIL");
+}
+if (allSum3 == 0)
+{
+    Console.WriteLine("PASS");
+}
+else
+{
+    Console.WriteLine("FAIL");
+}
 
 
 public class Article
 {
-    public int Id = 0;
-    public string Title = "";
-    public string Author = "";
-    public int Views = 0;
-    public DateTime CreatedAt;
-
-    public Article()
-    {
-
-    }
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Author { get; set; }
+    public int Views { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public Article(int id, string title, string author, int views, DateTime createdAt)
     {
