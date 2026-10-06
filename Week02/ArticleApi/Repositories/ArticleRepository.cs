@@ -1,5 +1,5 @@
-namespace Article.Repositories;
-using Article.Models;
+namespace ArticleApi.Repositories;
+using ArticleApi.Models;
 
 public class ArticleRepository
 {

@@ -1,29 +1,29 @@
-namespace Article.Controllers;
+namespace ArticleApi.Controllers;
 
-using Article.Models;
-using Article.Repositories;
+using ArticleApi.Models;
+using ArticleApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]
-public class ArticleController : ControllerBase
+public class ArticlesController : ControllerBase
 {
-    private readonly ArticleRepository _Article;
-    public ArticleController(ArticleRepository article)
+    private readonly ArticleRepository _repository;
+    public ArticlesController(ArticleRepository article)
     {
-        _Article = article;
+        _repository = article;
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetArticle()
+    public async Task<ActionResult<IEnumerable<Article>>> GetArticle()
     {
-        return Ok(await _Article.GetAllAsync());
+        return await _repository.GetAllAsync();
     }
 
-    [HttpGet("{Id}")]
-    public async Task<ActionResult> GetArticle(int Id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Article>> GetArticle(int id)
     {
-        var article = await _Article.GetByIdAsync(Id);
+        var article = await _repository.GetByIdAsync(id);
         if (article is null) return NotFound();
         return Ok(article);
     }

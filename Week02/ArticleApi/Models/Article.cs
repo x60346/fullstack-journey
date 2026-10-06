@@ -1,4 +1,4 @@
-namespace Article.Models;
+namespace ArticleApi.Models;
 
 public class Article
 {

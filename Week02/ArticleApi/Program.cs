@@ -1,4 +1,4 @@
-using Article.Repositories;
+using ArticleApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
